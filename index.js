@@ -3,15 +3,16 @@ const app = express()
 app.use(express.json());
 const port = 3000
 
-const blueBots = []
-const redBots = []
+var blueBots = []
+var redBots = []
 
 function newBot(port) {
   return {
     botNumber: Math.floor(Math.random() * 9999),
-    botPort:   botPort = port
+    botPort: botPort = port
   }
 }
+
 app.post('/register/blue', (req, res) => {
   const blueBot = newBot(req.body.port)
   blueBots.push(blueBot)
@@ -35,6 +36,28 @@ app.get('/bots/blue', (req, res) => {
 app.get('/bots/red', (req, res) => {
   res.send(redBots)
   console.log(`List of Red Bots: \n${JSON.stringify(redBots)}`)
+}
+)
+
+app.delete('/bots/red', (req, res) => {
+  var botToDelete = req.body.botNumber
+  console.log(`Deleting Red Bot: ${botToDelete}`)
+  
+  redBots = redBots.filter((item) => item.botNumber !== botToDelete)
+
+  res.sendStatus(204)
+  console.log(`Updated Red Bot list:\n${JSON.stringify(redBots)}`)
+}
+)
+
+app.delete('/bots/blue', (req, res) => {
+  var botToDelete = req.body.botNumber
+  console.log(`Deleting blue Bot: ${botToDelete}`)
+  
+  blueBots = blueBots.filter((item) => item.botNumber !== botToDelete)
+
+  res.sendStatus(204)
+  console.log(`Updated Blue Bot list:\n${JSON.stringify(blueBots)}`)
 }
 )
 
